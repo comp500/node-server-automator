@@ -1,4 +1,20 @@
 module.exports = function (dbFile, worldFolder) {
+	if (dbFile == null || worldFolder == null) {
+		console.error("Um, what?");
+		return false;
+	}
+	if (require('exists-file')(dbFile) != true) {
+		try {
+			var mkdirp = require('mkdirp');
+			mkdirp.sync(require("path").dirname(dbFile)); // ensure dbFile's location has a folder
+			fs.writeFileSync(file, JSON.stringify({}));
+		} catch (e) {
+			console.error("Error while writing main database file:");
+			console.error(e);
+			return false;
+		}
+	}
+	
 	return {
 		saveFile: function (file, data) {
 			try {
@@ -14,8 +30,7 @@ module.exports = function (dbFile, worldFolder) {
 			}
 		},
 		readFile: function (file) {
-			var existsFile = require('exists-file');
-			if (existsFile(file)) {
+			if (require('exists-file')(file)) {
 				try {
 					const fs = require("fs");
 					var data = JSON.parse(fs.readFileSync(file, 'UTF-8'));
@@ -35,8 +50,7 @@ module.exports = function (dbFile, worldFolder) {
 				console.error("Name invalid.");
 				return false;
 			} else {
-				var existsFile = require('exists-file');
-				if (existsFile(worldFolder + worldSanitised + "/")) {
+				if (require('exists-file')(worldFolder + worldSanitised + "/")) {
 					console.error("World already exists!");
 					return false;
 				} else {
@@ -100,6 +114,13 @@ module.exports = function (dbFile, worldFolder) {
 			} else {
 				console.error("Error: No dataType specified to saveData.");
 				return false;
+			}
+		},
+		listWorlds: function () {
+			if (require('exists-file')(worldFolder)) {
+				return require("fs").readdirSync(worldFolder);
+			} else {
+				return {};
 			}
 		}
 	};

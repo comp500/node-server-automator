@@ -25,7 +25,7 @@ function settingPrint(array) {
 }
 
 // print profile list:
-var dbProfiles = db.readData("profiles").profiles;
+var dbProfiles = db.listWorlds();
 var profilesArray = [];
 for (i = 0; i < dbProfiles.length; i++) { // put data in array
 	profilesArray.push(dbProfiles[i].name);
@@ -325,7 +325,7 @@ rl.question('Select profile: ', (answer) => { // ask user what profile they want
 					process.exit();
 				} else {
 					i = 0;
-					var dbProfiles = db.readData("profiles").profiles;
+					var dbProfiles = db.readData("profiles").profiles; //fix
 					while (profilesArray[answer - 1] != dbProfiles[i].name) {
 						i++;
 					}
