@@ -1,7 +1,14 @@
 module.exports = function (dbFile, worldFolder) {
 	return {
 		saveFile: function (file, data) {
-			
+			try {
+				fs.writeFileSync(file, JSON.stringify(data));
+				return true;
+			} catch (e) {
+				console.error("Error while reading file:");
+				console.error(e);
+				return false;
+			}
 		},
 		readFile: function (file) {
 			var existsFile = require('exists-file');
