@@ -17,10 +17,8 @@ module.exports = function (dbFile, worldFolder) {
 	return {
 		saveFile: function (file, data) {
 			try {
-				const fs = require("fs");
-				var mkdirp = require('mkdirp');
-				mkdirp.sync(require("path").dirname(file));
-				fs.writeFileSync(file, JSON.stringify(data));
+				require('mkdirp').sync(require("path").dirname(file));
+				require("fs").writeFileSync(file, JSON.stringify(data));
 				return true;
 			} catch (e) {
 				console.error("Error while writing file:");
@@ -31,8 +29,7 @@ module.exports = function (dbFile, worldFolder) {
 		readFile: function (file) {
 			if (require('exists-file')(file)) {
 				try {
-					const fs = require("fs");
-					var data = JSON.parse(fs.readFileSync(file, 'UTF-8'));
+					var data = JSON.parse(require("fs").readFileSync(file, 'UTF-8'));
 					return data;
 				} catch (e) {
 					console.error("Error while reading file:");
@@ -119,8 +116,8 @@ module.exports = function (dbFile, worldFolder) {
 			if (require('exists-file')(worldFolder)) {
 				return require("fs").readdirSync(worldFolder);
 			} else {
-				return {};
+				return [];
 			}
 		}
 	};
-}
+};
