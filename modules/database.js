@@ -9,11 +9,18 @@ module.exports = function (dbFile, worldFolder) {
 		checkWorldName: function (worldName) {
 			var worldSanitised = require("sanitize-filename")(worldName);
 			if (worldSanitised == "") {
+				console.error("Name invalid.");
 				return false;
 			} else {
-				
+				var existsFile = require('exists-file');
+				if (existsFile(worldFolder + worldSanitised + "/")) {
+					console.error("World already exists!");
+					return false;
+				} else {
+					return worldSanitised;
+				}
 			}
-		}
+		},
 		mapWorldFolder: function (worldName) { // has trailing slash
 			if (worldName) {
 				return worldFolder + worldName + "/";
