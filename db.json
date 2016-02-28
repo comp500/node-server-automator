@@ -1,0 +1,1 @@
+{"profiles":[{"name":"FlatTest","version":"1.8.9","properties":{"motd":"Flatness","gamemode":1,"online-mode":true,"level-type":"FLAT","generator-settings":"3;minecraft:bedrock,3*minecraft:stone,52*minecraft:sandstone;2;"}},{"name":"OldTest","version":"1.4.2","properties":{"motd":"Test","gamemode":1,"online-mode":true,"level-type":"DEFAULT"}}]}
