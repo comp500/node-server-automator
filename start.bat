@@ -1,3 +1,3 @@
 @ECHO OFF
-node serverAutomator.js
+node serverAutomator2.js
 pause
