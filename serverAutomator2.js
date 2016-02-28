@@ -28,7 +28,7 @@ function settingPrint(array) {
 var dbProfiles = db.listWorlds();
 var profilesArray = [];
 for (i = 0; i < dbProfiles.length; i++) { // put data in array
-	profilesArray.push(dbProfiles[i].name);
+	profilesArray.push(dbProfiles[i]);
 }
 profilesArray.push("New Profile");
 listPrint(profilesArray);

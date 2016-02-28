@@ -5,9 +5,8 @@ module.exports = function (dbFile, worldFolder) {
 	}
 	if (require('exists-file')(dbFile) != true) {
 		try {
-			var mkdirp = require('mkdirp');
-			mkdirp.sync(require("path").dirname(dbFile)); // ensure dbFile's location has a folder
-			fs.writeFileSync(file, JSON.stringify({}));
+			require('mkdirp').sync(require("path").dirname(dbFile)); // ensure dbFile's location has a folder
+			require("fs").writeFileSync(dbFile, JSON.stringify({}));
 		} catch (e) {
 			console.error("Error while writing main database file:");
 			console.error(e);
