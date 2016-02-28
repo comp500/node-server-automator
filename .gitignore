@@ -3,3 +3,4 @@ profiles/
 versions/
 node_modules/
 worlds/
+db.json

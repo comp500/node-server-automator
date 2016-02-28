@@ -2,10 +2,13 @@ module.exports = function (dbFile, worldFolder) {
 	return {
 		saveFile: function (file, data) {
 			try {
+				const fs = require("fs");
+				var mkdirp = require('mkdirp');
+				mkdirp.sync(require("path").dirname(file));
 				fs.writeFileSync(file, JSON.stringify(data));
 				return true;
 			} catch (e) {
-				console.error("Error while reading file:");
+				console.error("Error while writing file:");
 				console.error(e);
 				return false;
 			}
@@ -14,6 +17,7 @@ module.exports = function (dbFile, worldFolder) {
 			var existsFile = require('exists-file');
 			if (existsFile(file)) {
 				try {
+					const fs = require("fs");
 					var data = JSON.parse(fs.readFileSync(file, 'UTF-8'));
 					return data;
 				} catch (e) {
@@ -65,14 +69,26 @@ module.exports = function (dbFile, worldFolder) {
 				console.error("Mapped file not found.");
 				return false;
 			}
-			var dataOrig = readFile(file); // check for file exists
+			var dataOrig = this.readFile(file); // check for file exists
 			var mergedData = null;
 			if (dataOrig == false) {
 				mergedData = data;
 			} else {
 				mergedData = require('deepmerge')(dataOrig, data);
 			}
-			return saveFile(file, mergedData);
+			return this.saveFile(file, mergedData);
+		},
+		readData: function (dataType, worldName) {
+			if (dataType) {
+				if (dataType == "world") {
+					return this.readFile(this.mapFile(worldName));
+				} else {
+					return this.readFile(this.mapFile());
+				}
+			} else {
+				console.error("Error: No dataType specified to readData.");
+				return false;
+			}
 		},
 		saveData: function (dataType, data) {
 			if (dataType) {

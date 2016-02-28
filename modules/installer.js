@@ -1,8 +1,21 @@
 module.exports = function (version, versionManifest, callback) {
 	var request = require('request');
+	const fs = require("fs");
 	i = 0;
 	while (version != versionManifest.versions[i].id) {
 		i++;
+	}
+	function ensureExists(path, mask, cb) {
+		if (typeof mask == 'function') { // allow the `mask` parameter to be optional
+			cb = mask;
+			mask = 0777;
+		}
+		fs.mkdir(path, mask, function(err) {
+			if (err) {
+				if (err.code == 'EEXIST') cb(null); // ignore the error if the folder already exists
+				else cb(err); // something else went wrong
+			} else cb(null); // successfully created folder
+		});
 	}
 	ensureExists("./versions", function (e) {
 		if (e) {

@@ -10,25 +10,7 @@ const rl = readline.createInterface({
 });
 
 // initiate database object variable
-var db = {};
-
-try {
-	fs.accessSync('./db.json', fs.W_OK); // check if we can read database file, throws error if we can't
-	db = JSON.parse(fs.readFileSync('./db.json', 'UTF-8')); // read database to object
-} catch (e) {
-	try {
-		fs.writeFileSync('./db.json', JSON.stringify({'profiles': []})); // throws error if we have no write permissions, writes database
-		data = fs.readFileSync('./db.json', 'UTF-8'); // check if we can read it back again, for parity purposes
-		if (JSON.stringify({'profiles': []}) != data) {
-			console.error("Error writing to db.json. We didn't get back what we wrote... FS corrupt?!");
-			process.exit();
-		}
-		db = JSON.parse(data); // put database in object
-	} catch (e) { // if we have no write permissions, print error
-		console.error("Error writing to db.json. Is it locked?");
-		process.exit();
-	}
-}
+var db = require("./modules/database.js")("./db.json", "./worlds/");
 
 function listPrint(array) {
 	for (i = 0; i < array.length; i++) {
@@ -43,9 +25,10 @@ function settingPrint(array) {
 }
 
 // print profile list:
+var dbProfiles = db.readData("profiles").profiles;
 var profilesArray = [];
-for (i = 0; i < db.profiles.length; i++) { // put data in array
-	profilesArray.push(db.profiles[i].name);
+for (i = 0; i < dbProfiles.length; i++) { // put data in array
+	profilesArray.push(dbProfiles[i].name);
 }
 profilesArray.push("New Profile");
 listPrint(profilesArray);
@@ -176,12 +159,10 @@ function configureProfile(profile) {
 								console.log(presetsArray[answer - 1] + " selected");
 								profile.properties['generator-settings'] = presets[presetsArray[answer - 1]];
 							}
-							db.profiles.push(profile);
-							saveDB();
+							db.saveData("world", profile);
 						});
 					} else {
-						db.profiles.push(profile);
-						saveDB();
+						db.saveData("world", profile);
 					}
 				});
 			});
@@ -295,17 +276,6 @@ function newProfile() {
 	});
 }
 
-function saveDB() {
-	try {
-		fs.writeFileSync('./db.json', JSON.stringify(db)); // try to save database
-	} catch (e) {
-		console.error("Error writing to db.json. Is it locked?");
-		console.log("Tried to write: ");
-		console.log(db);
-		process.exit();
-	}
-}
-
 function copyFiles(profile, callback) {
 	fs.writeFile("./game/server.properties", require("minecraft-server-properties").stringify(profile.properties), function(err) {
 		if(err) {
@@ -355,10 +325,11 @@ rl.question('Select profile: ', (answer) => { // ask user what profile they want
 					process.exit();
 				} else {
 					i = 0;
-					while (profilesArray[answer - 1] != db.profiles[i].name) {
+					var dbProfiles = db.readData("profiles").profiles;
+					while (profilesArray[answer - 1] != dbProfiles[i].name) {
 						i++;
 					}
-					var profile = db.profiles[i];
+					var profile = dbProfiles[i];
 					copyFiles(profile, function(){});
 				}
 			});
