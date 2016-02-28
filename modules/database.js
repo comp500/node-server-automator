@@ -4,7 +4,19 @@ module.exports = function (dbFile, worldFolder) {
 			
 		},
 		readFile: function (file) {
-			
+			var existsFile = require('exists-file');
+			if (existsFile(file)) {
+				try {
+					var data = JSON.parse(fs.readFileSync(file, 'UTF-8'));
+					return data;
+				} catch (e) {
+					console.error("Error while reading file:");
+					console.error(e);
+					return false;
+				}
+			} else {
+				return false;
+			}
 		},
 		checkWorldName: function (worldName) {
 			var worldSanitised = require("sanitize-filename")(worldName);
