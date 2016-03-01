@@ -1,6 +1,7 @@
-module.exports = function () {
-	const db = require("database.js"); // all your database are belong to us
+module.exports = function (db) {
 	return {
-		
+		makeWorld: function () {
+			
+		}
 	};
 };
